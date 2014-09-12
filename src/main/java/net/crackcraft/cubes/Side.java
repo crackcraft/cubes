@@ -4,25 +4,75 @@ package net.crackcraft.cubes;
  * Created by crackcraft on 12.09.2014.
  */
 public class Side {
-    private final boolean[][] plane;
+    private final boolean[][] data;
     public Side(String... rows) {
         final int N = rows.length;
-        plane = new boolean[N][];
+        data = new boolean[N][];
         for(int x=0; x<N; x++) {
-            plane[x] = new boolean[N];
+            data[x] = new boolean[N];
             for(int y=0; y<N; y++) {
-                plane[x][y] = !Character.isSpaceChar(rows[x].charAt(y));
+                data[x][y] = !Character.isSpaceChar(rows[x].charAt(y));
             }
         }
+    }
+
+    public boolean get(int x, int y) {
+        return data[x][y];
+    }
+
+    private final static int[][] ROTATIONS = new int[][] {{
+        1, 0,
+        0, 1,
+    }, {
+        0,-1,
+        1, 0
+    }, {
+        -1, 0,
+        0, -1
+    }, {
+        0, 1,
+        -1, 0
+    }, {
+        1, 0,
+        0, -1
+    }, {
+        0, -1,
+        -1, 0
+    }, {
+        -1, 0,
+        0, 1
+    }, {
+        0, 1,
+        1, 0
+    }};
+
+    public boolean get(int x, int y, int rot) {
+        int x1 = x - Cube.OFFSET;
+        int y1 = y - Cube.OFFSET;
+        int x2 = x1 * ROTATIONS[rot][0] + y1 * ROTATIONS[rot][2];
+        int y2 = x1 * ROTATIONS[rot][1] + y1 * ROTATIONS[rot][3];
+        return data[x2+Cube.OFFSET][y2+Cube.OFFSET];
     }
 
     @Override
     public String toString() {
         StringBuilder out = new StringBuilder();
-        for(int x=0; x<plane.length; x++) {
+        for(int x=0; x<Cube.SIZE; x++) {
             out.append('\n');
-            for(int y=0; y<plane[x].length; y++) {
-                out.append(plane[x][y]? '#': ' ');
+            for(int y=0; y<Cube.SIZE; y++) {
+                out.append(data[x][y]? '#': ' ');
+            }
+        }
+        out.append('\n');
+        return out.toString();
+    }
+
+    public String toString(int rot) {
+        StringBuilder out = new StringBuilder();
+        for(int x=0; x<Cube.SIZE; x++) {
+            out.append('\n');
+            for(int y=0; y<Cube.SIZE; y++) {
+                out.append(get(x, y, rot)? '#': ' ');
             }
         }
         out.append('\n');

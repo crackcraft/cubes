@@ -8,6 +8,7 @@ import java.util.regex.Pattern;
  */
 public class Cube {
     public static final int SIZE = 5;
+    public static final int OFFSET = (Cube.SIZE-1)/2;
     private final Side[] sides;
     public Cube(String desc3cols2rows) {
         Pattern re = Pattern.compile("^(.....)\\s?(.....)\\s?(.....)$", Pattern.MULTILINE);
@@ -32,7 +33,46 @@ public class Cube {
         };
     }
 
-    public Side getSide(int i) {
-        return sides[i];
+    /**
+     * @param sidePositions - index of side from the cube at position 0, 1,..5
+     * @param sideRotation - rotation of side (0 - as is, 1 - clockwise 90 degree, 2 - 180 degree,  at position
+     */
+    public boolean test(int[] sidePositions, int[] sideRotation) {
+        State state = new State();
+        if(!state.apply(sides[sidePositions[0]], sideRotation[0])) {
+            return false;
+        }
+
+        state.rotX();
+        if(!state.apply(sides[sidePositions[1]], sideRotation[1])) {
+            return false;
+        }
+
+        state.rotX();
+        if(!state.apply(sides[sidePositions[2]], sideRotation[2])) {
+            return false;
+        }
+
+        state.rotX();
+        if(!state.apply(sides[sidePositions[3]], sideRotation[3])) {
+            return false;
+        }
+
+        state.rotY();
+        if(!state.apply(sides[sidePositions[4]], sideRotation[4])) {
+            return false;
+        }
+
+        state.rotY();
+        state.rotY();
+        if(!state.apply(sides[sidePositions[5]], sideRotation[5])) {
+            return false;
+        }
+
+        // once we've got here, we can dump the answer
+
+        // TODO
+        System.out.println("GOTTA!");
+        return true;
     }
 }
