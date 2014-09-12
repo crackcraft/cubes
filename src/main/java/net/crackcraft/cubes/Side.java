@@ -60,22 +60,32 @@ public class Side {
         for(int x=0; x<Cube.SIZE; x++) {
             out.append('\n');
             for(int y=0; y<Cube.SIZE; y++) {
-                out.append(data[x][y]? '#': ' ');
+                out.append(data[x][y]? 'o': ' ');
             }
         }
         out.append('\n');
         return out.toString();
     }
 
-    public String toString(int rot) {
-        StringBuilder out = new StringBuilder();
+    private int rotx(int x, int y, int rot) {
+        int x1 = x - Cube.OFFSET;
+        int y1 = y - Cube.OFFSET;
+        return Cube.OFFSET + x1 * ROTATIONS[rot][0] + y1 * ROTATIONS[rot][2];
+    }
+    private int roty(int x, int y, int rot) {
+        int x1 = x - Cube.OFFSET;
+        int y1 = y - Cube.OFFSET;
+        return Cube.OFFSET + x1 * ROTATIONS[rot][1] + y1 * ROTATIONS[rot][3];
+    }
+
+
+    public void print(char[][] out, int x0, int y0, int rot, int rot2) {
         for(int x=0; x<Cube.SIZE; x++) {
-            out.append('\n');
             for(int y=0; y<Cube.SIZE; y++) {
-                out.append(get(x, y, rot)? '#': ' ');
+                out[x0+rotx(x, y, rot2)][y0+roty(x, y, rot2)] = (get(x, y, rot)? 'o': ' ');
             }
         }
-        out.append('\n');
-        return out.toString();
+
     }
+
 }
