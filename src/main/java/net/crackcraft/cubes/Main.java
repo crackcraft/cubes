@@ -9,18 +9,30 @@ import java.util.List;
  */
 public class Main {
 
-    private static void solve(String name, String task) throws IOException {
-        Cube cube = new Cube(task);
-        List<Solution> sols = cube.solve(true);
+    private static synchronized void print(String s) {
+        System.out.print(s);
+    }
 
-        System.out.println(name + ": "+sols.size()+" solution(s)");
+    private static void solve(final String name, final String task) throws IOException {
 
-        FileWriter out = new FileWriter(name);
-        for (Solution sol : sols) {
-            out.append(sol.toString());
-            out.append("--8<-----------\n");
-        }
-        out.close();
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                Cube cube = new Cube(task);
+                List<Solution> sols = cube.solve(false);
+                print(name + "\n" + task + "\n== " + sols.size() + " solution(s)\n\n");
+                try {
+                    FileWriter out = new FileWriter(name);
+                    for (Solution sol : sols) {
+                        out.append(sol.toString());
+                        out.append("--8<-----------\n");
+                    }
+                    out.close();
+                } catch(IOException ex) {
+                    print(name + ": fail to dump solutions to file");
+                }
+            }
+        }).start();
     }
 
     public static void main(String[] args) throws IOException {
