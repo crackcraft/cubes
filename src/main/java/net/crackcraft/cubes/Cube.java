@@ -1,6 +1,7 @@
 package net.crackcraft.cubes;
 
-import java.util.Arrays;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -34,55 +35,21 @@ public class Cube {
         };
     }
 
-    public boolean test(int[] pos, int[] rot) {
-        State state = new State();
-        if(!state.apply(sides[pos[0]], rot[0])) {
-            return false;
-        }
+    Side side(int idx) { return sides[idx]; }
 
-        state.rotX();
-        if(!state.apply(sides[pos[1]], rot[1])) {
-            return false;
-        }
-
-        state.rotX();
-        if(!state.apply(sides[pos[2]], rot[2])) {
-            return false;
-        }
-
-        state.rotX();
-        if(!state.apply(sides[pos[3]], rot[3])) {
-            return false;
-        }
-
-        state.rotY();
-        if(!state.apply(sides[pos[4]], rot[4])) {
-            return false;
-        }
-
-        state.rotY();
-        state.rotY();
-        if(!state.apply(sides[pos[5]], rot[5])) {
-            return false;
-        }
-
-        // print the solution
-        char[][] out = new char[4*Cube.SIZE][];
-        for(int i=0; i<out.length; i++) {
-            out[i] = new char[3*Cube.SIZE];
-            Arrays.fill(out[i], ' ');
-        }
-
-        for(int i=0; i<4; i++) {
-            sides[pos[i]].print(out, Cube.SIZE*i, Cube.SIZE, rot[i], 1);
-        }
-        sides[pos[4]].print(out, 0, 2*Cube.SIZE, pos[4], 6);
-        sides[pos[5]].print(out, 0, 0, pos[5], 1);
-
-        for(int i=0; i<out.length; i++) {
-            System.out.println(new String(out[i]));
-        }
-
-        return true;
+    public List<Solution> solve(boolean first) {
+        List<Solution> res = new ArrayList<Solution>();
+        Solution sol = new Solution(this);
+        do {
+            if(sol.test()) {
+                res.add(new Solution(sol));
+                if(first) {
+                    break;
+                }
+            }
+        } while(sol.next());
+        return res;
     }
+
+
 }

@@ -46,9 +46,9 @@ public class State {
                 for(int z=0; z<Cube.SIZE; z++) {
                     if(get(x, y, z)) {
                         final int z1 = z - Cube.OFFSET;
-                        int x2 = x1 * m[3 * 0 + 0] + y1 * m[3 * 1 + 0] + z1 * m[3 * 2 + 0];
-                        int y2 = x1 * m[3 * 0 + 1] + y1 * m[3 * 1 + 1] + z1 * m[3 * 2 + 1];
-                        int z2 = x1 * m[3 * 0 + 2] + y1 * m[3 * 1 + 2] + z1 * m[3 * 2 + 2];
+                        int x2 = x1 * m[0] + y1 * m[3] + z1 * m[6];
+                        int y2 = x1 * m[1] + y1 * m[4] + z1 * m[7];
+                        int z2 = x1 * m[2] + y1 * m[5] + z1 * m[8];
 
                         next[idx(x2 + Cube.OFFSET, y2 + Cube.OFFSET, z2 + Cube.OFFSET)] = true;
                     }
